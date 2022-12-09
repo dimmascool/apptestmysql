@@ -22,7 +22,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
 
     @Override
     public ViewProcessHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_barang, parent, false); //memanggil layout list recyclerview
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_mhs, parent, false); //memanggil layout list recyclerview
         ViewProcessHolder processHolder = new ViewProcessHolder(view);
         return processHolder;
     }

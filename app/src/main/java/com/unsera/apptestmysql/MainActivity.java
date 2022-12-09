@@ -6,14 +6,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mManager;
     ArrayList<Mahasiswa> mItems;
+    FloatingActionButton floatinButton;
 
     ActionBar actionBar;
     private String title = "List Mahasiswa";
@@ -48,10 +53,19 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mManager);
         mAdapter = new AdapterProcess(context, mItems);
         mRecyclerView.setAdapter(mAdapter);
-
+        floatinButton = findViewById(R.id.btnFloatingTambah);
+        floatinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent moveIntent = new Intent(MainActivity.this, ActivityTambah.class);
+                startActivity(moveIntent);
+            }
+        });
 
         loadjson();
     }
+
+
 
     //proses mengambil data
     private void loadjson(){

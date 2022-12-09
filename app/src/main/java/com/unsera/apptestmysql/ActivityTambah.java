@@ -4,7 +4,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +35,8 @@ public class ActivityTambah extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tambah);
+        context=ActivityTambah.this;
+
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(title);
@@ -50,7 +51,7 @@ public class ActivityTambah extends AppCompatActivity {
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SimpanBarang();
+                SaveData();
             }
         });
     }
@@ -66,7 +67,7 @@ public class ActivityTambah extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    private void SimpanBarang(){
+    private void SaveData(){
         String NIMMhs = etNIM.getText().toString().trim();
         String NamaMhs = etNama.getText().toString().trim();
         String JurusanMhs = etJurusan.getText().toString().trim();
@@ -89,7 +90,8 @@ public class ActivityTambah extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "The server unreachable", Toast.LENGTH_LONG).show();
             }
-        })
+        }
+        )
         {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {

@@ -7,41 +7,39 @@
     tools:context=".ActivityUtama">
 
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tvHeader"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="95dp">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/judulAplikasi"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="@string/judulAplikasi"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            />
+    <Button
+        android:id="@+id/btnListMhs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="36dp"
+        android:text="List Mahasiswa"
+        app:layout_constraintStart_toStartOf="@+id/btnTambahMhs"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeader" />
 
-        <Button
-            android:id="@+id/btnListMhs"
-            android:layout_marginTop="35dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="List Mahasiswa" />
-
-        <Button
-            android:id="@+id/btnTambahMhs"
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tambah Data Mahsiswa" />
-
-
-
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/btnTambahMhs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="Tambah Data Mahsiswa"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnListMhs" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
