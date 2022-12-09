@@ -1,0 +1,67 @@
+package com.unsera.apptestmysql;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProcessHolder> {
+
+    Context context;
+    private ArrayList<Barang> item; //memanggil modelData
+
+    public AdapterProcess(Context context, ArrayList<Barang> item) {
+        this.context = context;
+        this.item = item;
+    }
+
+    @Override
+    public ViewProcessHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_barang, parent, false); //memanggil layout list recyclerview
+        ViewProcessHolder processHolder = new ViewProcessHolder(view);
+        return processHolder;
+    }
+
+
+    @Override
+    public void onBindViewHolder(ViewProcessHolder holder, int position) {
+
+        final Barang data = item.get(position);
+        final int panjang = data.getNama().length();
+        if (panjang >= 16){
+            final String mIsi = data.getNama().substring(0,16);
+            holder.txtNamaBarang.setText(mIsi.concat("..."));
+        } else {
+            final String mIsi = data.getNama();
+            holder.txtNamaBarang.setText(mIsi);
+        }
+        holder.txtKodeBarang.setText(data.getKode());
+        holder.txtBuatan.setText(data.getBuatan());
+    }
+
+    @Override
+    public int getItemCount() {
+        return item.size();
+    }
+
+    public class ViewProcessHolder extends RecyclerView.ViewHolder {
+
+        TextView txtNamaBarang;
+        TextView txtKodeBarang;
+        TextView txtBuatan;
+
+        public ViewProcessHolder(View itemView) {
+            super(itemView);
+
+            txtNamaBarang = itemView.findViewById(R.id.txtNamaBarang);
+            txtKodeBarang = itemView.findViewById(R.id.txtKodeBarang);
+            txtBuatan = itemView.findViewById(R.id.txtBuatan);
+
+        }
+    }
+}

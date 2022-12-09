@@ -1,0 +1,154 @@
+package com.unsera.apptestmysql;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MainActivity extends AppCompatActivity {
+
+    Context context;
+    RecyclerView mRecyclerView;
+    RecyclerView.Adapter mAdapter;
+    RecyclerView.LayoutManager mManager;
+    ArrayList<Barang> mItems;
+    EditText etKode,etNama,etBuatan;
+    Button btnSimpan;
+    RequestQueue requestQueue;
+    StringRequest stringRequest;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        context=MainActivity.this;
+
+        getSupportActionBar().hide();
+
+        requestQueue = Volley.newRequestQueue(this);
+
+        etKode = findViewById(R.id.etKode);
+        etNama = findViewById(R.id.etNama);
+        etBuatan = findViewById(R.id.etBuatan);
+
+        btnSimpan = findViewById(R.id.btnSimpan);
+        btnSimpan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SimpanBarang();
+            }
+        });
+
+        mRecyclerView = findViewById(R.id.recyclerview);
+        mItems = new ArrayList<>();
+        mManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(mManager);
+        mAdapter = new AdapterProcess(context, mItems);
+        mRecyclerView.setAdapter(mAdapter);
+
+        loadjson();
+    }
+
+    //proses mengambil data
+    private void loadjson(){
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(MyLink.MY_URL, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                mItems.clear();
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonObject = response.getJSONObject(i);
+
+                        Barang brg = new Barang();
+                        brg.setNama(jsonObject.getString("nama"));
+                        brg.setBuatan(jsonObject.getString("buatan"));
+                        brg.setKode(jsonObject.getString("kode"));
+
+                        mItems.add(brg);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley", error.toString());
+            }
+        }
+        );
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonArrayRequest);
+    }
+
+    private void SimpanBarang(){
+        String KodeBarang = etKode.getText().toString().trim();
+        String NamaBarang = etNama.getText().toString().trim();
+        String Buatan = etBuatan.getText().toString().trim();
+
+        String link_Simpan = "http://10.0.2.2/test/simpanbarang.php";
+
+        stringRequest = new StringRequest(Request.Method.POST, link_Simpan, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //If we are getting success from server
+                if (response.contains("success")) {
+                    Toast.makeText(context, "Simpan Data Sukses", Toast.LENGTH_LONG).show();
+                    loadjson();
+                } else {
+                    //Displaying an error message on toast
+                    Toast.makeText(context, "Gagal Simpan Data", Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "The server unreachable", Toast.LENGTH_LONG).show();
+            }
+        }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params = new HashMap<>();
+                params.put("kode",KodeBarang);
+                params.put("nama",NamaBarang);
+                params.put("buatan",Buatan);
+                //...
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
+}
