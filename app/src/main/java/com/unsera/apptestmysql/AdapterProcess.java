@@ -1,23 +1,31 @@
 package com.unsera.apptestmysql;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProcessHolder> {
+public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProcessHolder>  {
 
     Context context;
     private ArrayList<Mahasiswa> item; //memanggil modelData
 
+
+
     public AdapterProcess(Context context, ArrayList<Mahasiswa> item) {
         this.context = context;
         this.item = item;
+
     }
 
     @Override
@@ -55,6 +63,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         TextView txtNimMahasiswa;
         TextView txtJurusanMahasiswa;
 
+
         public ViewProcessHolder(View itemView) {
             super(itemView);
 
@@ -62,6 +71,14 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
             txtNimMahasiswa = itemView.findViewById(R.id.txtNIM);
             txtJurusanMahasiswa = itemView.findViewById(R.id.txtJurusan);
 
+            Button btnEdit = itemView.findViewById(R.id.btnEdit);
+            Button btnHapus = itemView.findViewById(R.id.btnHapus);
+
         }
     }
+
+    private void startActivity(Intent moveIntent) {
+
+    }
+
 }

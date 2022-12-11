@@ -18,6 +18,7 @@ public class ActivityUtama extends AppCompatActivity implements View.OnClickList
 
         Button btnList = findViewById(R.id.btnListMhs);
         Button btnTambah = findViewById(R.id.btnTambahMhs);
+
         btnList.setOnClickListener(this);
         btnTambah.setOnClickListener(this);
     }
