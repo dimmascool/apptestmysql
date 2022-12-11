@@ -1,5 +1,6 @@
 package com.unsera.apptestmysql;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
@@ -28,12 +29,31 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
 
     }
 
+    public void MyAdapter(Context context) {
+        this.context = context;
+    }
+
+
     @Override
     public ViewProcessHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_mhs, parent, false); //memanggil layout list recyclerview
+
+        Button editBtn = view.findViewById(R.id.btnEdit);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myactivity = new Intent(context.getApplicationContext(), ActivityEdit.class);
+                myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                context.getApplicationContext().startActivity(myactivity);
+            }
+        });
+
+
         ViewProcessHolder processHolder = new ViewProcessHolder(view);
         return processHolder;
     }
+
+
 
 
     @Override
@@ -71,14 +91,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
             txtNimMahasiswa = itemView.findViewById(R.id.txtNIM);
             txtJurusanMahasiswa = itemView.findViewById(R.id.txtJurusan);
 
-            Button btnEdit = itemView.findViewById(R.id.btnEdit);
-            Button btnHapus = itemView.findViewById(R.id.btnHapus);
-
         }
-    }
-
-    private void startActivity(Intent moveIntent) {
-
     }
 
 }

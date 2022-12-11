@@ -27,6 +27,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     Context context;
@@ -43,6 +45,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        LayoutInflater inflater = getLayoutInflater();
+//        View view = inflater.inflate(R.layout.list_mhs, null);
+//        Button editBtn = view.findViewById(R.id.btnEdit);
+//
+//        editBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(context, "Clicked", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 
         actionBar = getSupportActionBar();
