@@ -17,10 +17,11 @@ public class ActivityUtama extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().hide();
 
         Button btnList = findViewById(R.id.btnListMhs);
-        Button btnTambah = findViewById(R.id.btnTambahMhs);
+        Button btnAboutMe = findViewById(R.id.btnAboutMe);
+
 
         btnList.setOnClickListener(this);
-        btnTambah.setOnClickListener(this);
+        btnAboutMe.setOnClickListener(this);
     }
 
     @Override
@@ -28,8 +29,8 @@ public class ActivityUtama extends AppCompatActivity implements View.OnClickList
         if (v.getId() == R.id.btnListMhs) {
             Intent moveIntent = new Intent(this, MainActivity.class);
             startActivity(moveIntent);
-        } else if (v.getId() == R.id.btnTambahMhs) {
-            Intent moveIntent = new Intent(this, ActivityTambah.class);
+        } else if (v.getId() == R.id.btnAboutMe) {
+            Intent moveIntent = new Intent(this, AboutActivity.class);
             startActivity(moveIntent);
         }
     }

@@ -3,4 +3,7 @@
     <string name="judulAplikasi">APLIKASI PENGOLAHAN DATA MAHASISWA</string>
     <string name="editBtn">Edit</string>
     <string name="hapusBtn">Hapus</string>
+    <string name="namaDev">Dimas Adam Saputra</string>
+    <string name="aboutPage">About Me</string>
+    <string name="btnMain">Masuk ke aplikasi</string>
 </resources>

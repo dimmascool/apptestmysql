@@ -93,7 +93,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
                             context.getApplicationContext().startActivity(moveIntent);
                         } else {
                             //Displaying an error message on toast
-                            Toast.makeText(context, "Gagal Simpan Data", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Gagal Hapus Data", Toast.LENGTH_LONG).show();
                         }
                     }
                 }, new Response.ErrorListener() {
