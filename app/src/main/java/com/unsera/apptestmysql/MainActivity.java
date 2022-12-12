@@ -9,9 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView.Adapter mAdapter;
     RecyclerView.LayoutManager mManager;
     ArrayList<Mahasiswa> mItems;
-    FloatingActionButton floatinButton;
+    FloatingActionButton floatinButtonTambah, floatinButtonRefresh;
 
     ActionBar actionBar;
     private String title = "List Mahasiswa";
@@ -45,18 +43,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        LayoutInflater inflater = getLayoutInflater();
-//        View view = inflater.inflate(R.layout.list_mhs, null);
-//        Button editBtn = view.findViewById(R.id.btnEdit);
-//
-//        editBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(context, "Clicked", Toast.LENGTH_LONG).show();
-//            }
-//        });
-
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -68,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mManager);
         mAdapter = new AdapterProcess(context, mItems);
         mRecyclerView.setAdapter(mAdapter);
-        floatinButton = findViewById(R.id.btnFloatingTambah);
-        floatinButton.setOnClickListener(new View.OnClickListener() {
+        floatinButtonTambah = findViewById(R.id.btnFloatingTambah);
+        floatinButtonTambah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent moveIntent = new Intent(MainActivity.this, ActivityTambah.class);
@@ -77,7 +63,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        floatinButtonRefresh = findViewById(R.id.btnFloatingRefresh);
+        floatinButtonRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "Refresh data", Toast.LENGTH_LONG).show();
+                loadjson();
+            }
+        });
 
         loadjson();
     }
@@ -88,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(MyLink.MY_URL, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                mItems.clear();
                 for (int i = 0; i < response.length(); i++) {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);

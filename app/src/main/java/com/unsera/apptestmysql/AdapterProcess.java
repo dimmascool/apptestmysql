@@ -29,26 +29,9 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
 
     }
 
-    public void MyAdapter(Context context) {
-        this.context = context;
-    }
-
-
     @Override
     public ViewProcessHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_mhs, parent, false); //memanggil layout list recyclerview
-
-        Button editBtn = view.findViewById(R.id.btnEdit);
-        editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myactivity = new Intent(context.getApplicationContext(), ActivityEdit.class);
-                myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                context.getApplicationContext().startActivity(myactivity);
-            }
-        });
-
-
         ViewProcessHolder processHolder = new ViewProcessHolder(view);
         return processHolder;
     }
@@ -70,6 +53,19 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         }
         holder.txtNimMahasiswa.setText(data.getNIM());
         holder.txtJurusanMahasiswa.setText(data.getJurusan());
+
+        holder.editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myactivity = new Intent(context.getApplicationContext(), ActivityEdit.class);
+                myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
+                myactivity.putExtra(ActivityEdit.EXTRA_NIM_LAMA, data.getNIM());
+                myactivity.putExtra(ActivityEdit.EXTRA_NIM, data.getNIM());
+                myactivity.putExtra(ActivityEdit.EXTRA_NAMA, data.getNama());
+                myactivity.putExtra(ActivityEdit.EXTRA_JURUSAN, data.getJurusan());
+                context.getApplicationContext().startActivity(myactivity);
+            }
+        });
     }
 
     @Override
@@ -82,7 +78,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         TextView txtNamaMahasiswa;
         TextView txtNimMahasiswa;
         TextView txtJurusanMahasiswa;
-
+        Button editBtn;
 
         public ViewProcessHolder(View itemView) {
             super(itemView);
@@ -90,6 +86,9 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
             txtNamaMahasiswa = itemView.findViewById(R.id.txtNama);
             txtNimMahasiswa = itemView.findViewById(R.id.txtNIM);
             txtJurusanMahasiswa = itemView.findViewById(R.id.txtJurusan);
+
+            editBtn = itemView.findViewById(R.id.btnEdit);
+
 
         }
     }
