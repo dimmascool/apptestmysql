@@ -91,9 +91,7 @@ public class ActivityTambah extends AppCompatActivity {
 
         if (!isEmptyFields) {
 
-            String link_Simpan = "https://dimas.bantani.net.id/api/api";
-
-            stringRequest = new StringRequest(Request.Method.POST, link_Simpan, new Response.Listener<String>() {
+            stringRequest = new StringRequest(Request.Method.POST, MyLink.MY_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     //If we are getting success from server

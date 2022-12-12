@@ -13,20 +13,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProcessHolder>  {
 
     Context context;
     private ArrayList<Mahasiswa> item; //memanggil modelData
 
-
+    RequestQueue requestQueue;
+    StringRequest stringRequest;
 
     public AdapterProcess(Context context, ArrayList<Mahasiswa> item) {
         this.context = context;
         this.item = item;
 
+        requestQueue = Volley.newRequestQueue(context);
     }
 
     @Override
@@ -41,6 +53,8 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
 
     @Override
     public void onBindViewHolder(ViewProcessHolder holder, int position) {
+
+
 
         final Mahasiswa data = item.get(position);
         final int panjang = data.getNama().length();
@@ -66,6 +80,45 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
                 context.getApplicationContext().startActivity(myactivity);
             }
         });
+        holder.btnHapus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stringRequest = new StringRequest(Request.Method.POST, MyLink.MY_URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //If we are getting success from server
+                        if (response.contains("success")) {
+                            Toast.makeText(context, "Hapus Data Sukses", Toast.LENGTH_LONG).show();
+                            Intent moveIntent = new Intent(context.getApplicationContext(), MainActivity.class);
+                            context.getApplicationContext().startActivity(moveIntent);
+                        } else {
+                            //Displaying an error message on toast
+                            Toast.makeText(context, "Gagal Simpan Data", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(context, "The server unreachable", Toast.LENGTH_LONG).show();
+                    }
+                }
+                )
+                {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String,String> params = new HashMap<>();
+                        params.put("request", "deletedata");
+                        params.put("deleteby", "NIM");
+                        params.put("nim", data.getNIM());
+
+                        //...
+                        return params;
+                    }
+                };
+
+                requestQueue.add(stringRequest);
+            }
+        });
     }
 
     @Override
@@ -78,7 +131,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         TextView txtNamaMahasiswa;
         TextView txtNimMahasiswa;
         TextView txtJurusanMahasiswa;
-        Button editBtn;
+        Button editBtn, btnHapus;
 
         public ViewProcessHolder(View itemView) {
             super(itemView);
@@ -88,8 +141,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
             txtJurusanMahasiswa = itemView.findViewById(R.id.txtJurusan);
 
             editBtn = itemView.findViewById(R.id.btnEdit);
-
-
+            btnHapus = itemView.findViewById(R.id.btnHapus);
         }
     }
 
