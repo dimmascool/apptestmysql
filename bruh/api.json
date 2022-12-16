@@ -1,0 +1,32 @@
+{
+	"status_code" : 200,
+    "message": "success",
+    "data": [
+    	{
+    		"id_pelanggan"	 : "11219049",
+    		"nama_pelanggan" : "Samid",
+    		"alamat"		 : "TCP",
+    		"nama_produk"	 : "Komet Produk",
+    		"harga_produk"	 : 1000000,
+    		"riwayat_pembayaran" : [
+    			{
+    				"id_pembayaran"		: 14,
+    				"bulan"				: "januari",
+    				"status_pembayaran"	: "lunas",
+    				"nominal"			: 1000000
+    			}
+    			{
+    				"id_pembayaran"		: 15,
+    				"bulan"				: "februari",
+    				"status_pembayaran"	: "lunas",
+    				"nominal"			: 1000000
+    			}
+    			{
+    				"id_pembayaran"		: 16,
+    				"bulan"				: "maret",
+    				"status_pembayaran"	: "lunas",
+    				"nominal"			: 1000000
+    			}
+    		]
+    	}
+    ]

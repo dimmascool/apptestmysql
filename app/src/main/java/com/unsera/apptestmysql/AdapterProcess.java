@@ -71,13 +71,13 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myactivity = new Intent(context.getApplicationContext(), ActivityEdit.class);
+                Intent myactivity = new Intent(context, ActivityEdit.class);
                 myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 myactivity.putExtra(ActivityEdit.EXTRA_NIM_LAMA, data.getNIM());
                 myactivity.putExtra(ActivityEdit.EXTRA_NIM, data.getNIM());
                 myactivity.putExtra(ActivityEdit.EXTRA_NAMA, data.getNama());
                 myactivity.putExtra(ActivityEdit.EXTRA_JURUSAN, data.getJurusan());
-                context.getApplicationContext().startActivity(myactivity);
+                context.startActivity(myactivity);
             }
         });
         holder.btnHapus.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +89,8 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
                         //If we are getting success from server
                         if (response.contains("success")) {
                             Toast.makeText(context, "Hapus Data Sukses", Toast.LENGTH_LONG).show();
-                            Intent moveIntent = new Intent(context.getApplicationContext(), MainActivity.class);
-                            context.getApplicationContext().startActivity(moveIntent);
+//                            Intent moveIntent = new Intent(context, MainActivity.class);
+//                            context.startActivity(moveIntent);
                         } else {
                             //Displaying an error message on toast
                             Toast.makeText(context, "Gagal Hapus Data", Toast.LENGTH_LONG).show();
