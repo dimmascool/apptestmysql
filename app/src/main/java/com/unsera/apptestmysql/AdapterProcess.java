@@ -83,7 +83,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         holder.ivProfile.setImageBitmap(imageBitMap);
 
 //        Picasso.get()
-//                .load(String.valueOf(imageBitMap))
+//                .load(imageBitMap)
 //                .placeholder(R.drawable.ic_baseline_account_circle_24)
 //                .error(R.drawable.ic_baseline_account_circle_24)
 //                .resize(40,40)

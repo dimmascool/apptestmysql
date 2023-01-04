@@ -3,8 +3,10 @@ package com.unsera.apptestmysql;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -57,6 +59,27 @@ public class ActivityTambah extends AppCompatActivity {
             }
         });
     }
+
+    int requestcode = 1;
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        context = ActivityTambah.this;
+        if (requestCode == requestCode && resultCode == Activity.RESULT_OK) {
+            if (data == null){
+                return;
+            }
+            Uri uri = data.getData();
+            Toast.makeText(context, uri.getPath(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void openfilechooser(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, requestcode);
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
