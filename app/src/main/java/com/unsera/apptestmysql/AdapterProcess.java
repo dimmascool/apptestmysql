@@ -5,13 +5,21 @@ import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +33,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
 
 public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProcessHolder>  {
 
@@ -48,12 +59,8 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         return processHolder;
     }
 
-
-
-
     @Override
     public void onBindViewHolder(ViewProcessHolder holder, int position) {
-
 
 
         final Mahasiswa data = item.get(position);
@@ -67,6 +74,21 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         }
         holder.txtNimMahasiswa.setText(data.getNIM());
         holder.txtJurusanMahasiswa.setText(data.getJurusan());
+
+        String imageData = data.getBlobImage();
+
+        byte[] imageBytes = Base64.decode(imageData, Base64.DEFAULT);
+        Bitmap imageBitMap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        holder.ivProfile.setImageBitmap(imageBitMap);
+
+//        Picasso.get()
+//                .load(String.valueOf(imageBitMap))
+//                .placeholder(R.drawable.ic_baseline_account_circle_24)
+//                .error(R.drawable.ic_baseline_account_circle_24)
+//                .resize(40,40)
+//                .centerCrop()
+//                .into(holder.ivProfile);
 
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,10 +154,12 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         TextView txtNimMahasiswa;
         TextView txtJurusanMahasiswa;
         Button editBtn, btnHapus;
+        ImageView ivProfile;
 
         public ViewProcessHolder(View itemView) {
             super(itemView);
 
+            ivProfile = itemView.findViewById(R.id.img_item_photo);
             txtNamaMahasiswa = itemView.findViewById(R.id.txtNama);
             txtNimMahasiswa = itemView.findViewById(R.id.txtNIM);
             txtJurusanMahasiswa = itemView.findViewById(R.id.txtJurusan);

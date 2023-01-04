@@ -88,12 +88,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonObject = response.getJSONObject(i);
 
-                        Mahasiswa brg = new Mahasiswa();
-                        brg.setNama(jsonObject.getString("nama"));
-                        brg.setJurusan(jsonObject.getString("jurusan"));
-                        brg.setNIM(jsonObject.getString("nim"));
+                        Mahasiswa mahasiswa = new Mahasiswa();
+                        mahasiswa.setNama(jsonObject.getString("nama"));
+                        mahasiswa.setJurusan(jsonObject.getString("jurusan"));
+                        mahasiswa.setNIM(jsonObject.getString("nim"));
+                        mahasiswa.setBlobImage(jsonObject.getString("img"));
 
-                        mItems.add(brg);
+                        mItems.add(mahasiswa);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

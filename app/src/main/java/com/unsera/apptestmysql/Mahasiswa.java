@@ -4,6 +4,15 @@ public class Mahasiswa {
     String NIM;
     String Nama;
     String Jurusan;
+    String blobImage;
+
+    public String getBlobImage() {
+        return blobImage;
+    }
+
+    public void setBlobImage(String blobImage) {
+        this.blobImage = blobImage;
+    }
 
     public String getNIM() {
         return NIM;
