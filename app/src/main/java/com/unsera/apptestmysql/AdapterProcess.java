@@ -114,6 +114,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
 //                            context.startActivity(moveIntent);
                         } else {
                             //Displaying an error message on toast
+                            Log.e("error message", response.toString());
                             Toast.makeText(context, "Gagal Hapus Data", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -122,8 +123,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(context, "The server unreachable", Toast.LENGTH_LONG).show();
                     }
-                }
-                )
+                })
                 {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
@@ -131,7 +131,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
                         params.put("request", "deletedata");
                         params.put("deleteby", "NIM");
                         params.put("nim", data.getNIM());
-
+                        Log.e("NIM", data.getNIM());
                         //...
                         return params;
                     }
