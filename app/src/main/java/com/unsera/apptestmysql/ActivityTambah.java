@@ -1,17 +1,24 @@
 package com.unsera.apptestmysql;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -22,6 +29,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,11 +45,15 @@ public class ActivityTambah extends AppCompatActivity {
 
     Context context;
     EditText etNIM,etNama, etJurusan;
-    Button btnSimpan;
+    Button btnSimpan, btnupload;
     RequestQueue requestQueue;
     StringRequest stringRequest;
     ActionBar actionBar;
     private String title = "Tambah Mahasiswa";
+
+    ImageView logo;
+    Bitmap bitmap;
+    String encodeImageString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,26 +78,63 @@ public class ActivityTambah extends AppCompatActivity {
                 SaveData();
             }
         });
-    }
 
-    int requestcode = 1;
+        logo = findViewById(R.id.img);
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        context = ActivityTambah.this;
-        if (requestCode == requestCode && resultCode == Activity.RESULT_OK) {
-            if (data == null){
-                return;
+        btnupload = findViewById(R.id.btnUpload);
+        btnupload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dexter.withActivity(ActivityTambah.this)
+                        .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response)
+                            {
+                                Intent intent=new Intent(Intent.ACTION_PICK);
+                                intent.setType("image/*");
+                                startActivityForResult(Intent.createChooser(intent,"Browse Image"),1);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                Log.e("data", response.toString());
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        }).check();
             }
-            Uri uri = data.getData();
-            Toast.makeText(context, uri.getPath(), Toast.LENGTH_SHORT).show();
-        }
+        });
     }
 
-    public void openfilechooser(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        startActivityForResult(intent, requestcode);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode==1 && resultCode==RESULT_OK)
+        {
+            Uri filepath=data.getData();
+            try
+            {
+                InputStream inputStream=getContentResolver().openInputStream(filepath);
+                bitmap= BitmapFactory.decodeStream(inputStream);
+                logo.setImageBitmap(bitmap);
+                encodeBitmapImage(bitmap);
+            }catch (Exception ex)
+            {
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void encodeBitmapImage(Bitmap bitmap)
+    {
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        byte[] bytesofimage=byteArrayOutputStream.toByteArray();
+        encodeImageString=android.util.Base64.encodeToString(bytesofimage, Base64.DEFAULT);
     }
 
 
@@ -120,7 +177,7 @@ public class ActivityTambah extends AppCompatActivity {
                 public void onResponse(String response) {
                     //If we are getting success from server
                     if (response.contains("success")) {
-                        Toast.makeText(context, "Simpan Data Sukses", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Data berhasil di simpan", Toast.LENGTH_LONG).show();
                         Intent moveIntent = new Intent(ActivityTambah.this, MainActivity.class);
                         startActivity(moveIntent);
                     } else {
@@ -142,6 +199,7 @@ public class ActivityTambah extends AppCompatActivity {
                     params.put("nim",NIMMhs);
                     params.put("nama",NamaMhs);
                     params.put("jurusan",JurusanMhs);
+                    params.put("img",encodeImageString);
                     params.put("request","insertnewdata");
                     //...
                     return params;

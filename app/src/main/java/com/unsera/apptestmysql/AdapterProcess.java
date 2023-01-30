@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -75,20 +76,17 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
         holder.txtNimMahasiswa.setText(data.getNIM());
         holder.txtJurusanMahasiswa.setText(data.getJurusan());
 
-        String imageData = data.getBlobImage();
+//        String imageData = data.getBlobImage();
+//
+//        byte[] imageBytes = Base64.decode(imageData, Base64.DEFAULT);
+//        Bitmap imageBitMap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+//
+//        holder.ivProfile.setImageBitmap(imageBitMap);
 
-        byte[] imageBytes = Base64.decode(imageData, Base64.DEFAULT);
-        Bitmap imageBitMap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
 
-        holder.ivProfile.setImageBitmap(imageBitMap);
-
-//        Picasso.get()
-//                .load(imageBitMap)
-//                .placeholder(R.drawable.ic_baseline_account_circle_24)
-//                .error(R.drawable.ic_baseline_account_circle_24)
-//                .resize(40,40)
-//                .centerCrop()
-//                .into(holder.ivProfile);
+        Glide.with(context).load("https://dimas.bantani.net.id/api/img/"+data.getNIM()+".jpg")
+                .placeholder(R.mipmap.ic_launcher)
+                .into(holder.ivProfile);
 
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +97,7 @@ public class AdapterProcess extends RecyclerView.Adapter<AdapterProcess.ViewProc
                 myactivity.putExtra(ActivityEdit.EXTRA_NIM, data.getNIM());
                 myactivity.putExtra(ActivityEdit.EXTRA_NAMA, data.getNama());
                 myactivity.putExtra(ActivityEdit.EXTRA_JURUSAN, data.getJurusan());
+                myactivity.putExtra(ActivityEdit.EXTRA_LINK_POTO, "https://dimas.bantani.net.id/api/img/"+data.getNIM()+".jpg");
                 context.startActivity(myactivity);
             }
         });

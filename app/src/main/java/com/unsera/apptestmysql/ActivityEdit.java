@@ -1,15 +1,23 @@
 package com.unsera.apptestmysql;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -19,7 +27,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,9 +55,18 @@ public class ActivityEdit extends AppCompatActivity {
     public static final String EXTRA_NAMA = "extra_nama";
     public static final String EXTRA_JURUSAN = "extra_jurusan";
 
+    public static final String EXTRA_LINK_POTO = "https://dimas.bantani.net.id/api/img/";
+
+
     EditText etNIM, etNama, etJurusan, etNIMLama;
 
-    String nimLama, nama, jurusan;
+    String nimLama, nama, jurusan, linkPoto;
+
+    ImageView ivProfile;
+
+    ImageView logo;
+    Bitmap bitmap;
+    String encodeImageString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +84,18 @@ public class ActivityEdit extends AppCompatActivity {
         etNIM = findViewById(R.id.etNIM);
         etNama = findViewById(R.id.etNama);
         etJurusan = findViewById(R.id.etJurusan);
+        ivProfile = findViewById(R.id.img);
 
         nimLama = getIntent().getStringExtra(EXTRA_NIM_LAMA);
         nama = getIntent().getStringExtra(EXTRA_NAMA);
         jurusan = getIntent().getStringExtra(EXTRA_JURUSAN);
+        linkPoto = getIntent().getStringExtra(EXTRA_LINK_POTO);
+
+        Glide.with(context).load(linkPoto)
+                .placeholder(R.mipmap.ic_launcher)
+                .into(ivProfile);
+
+        encodeImageString = "";
 
 
         etNIMLama.setText(nimLama);
@@ -71,6 +105,34 @@ public class ActivityEdit extends AppCompatActivity {
 
         etNIMLama.setEnabled(false);
 //        etNIMLama.setVisibility(View.GONE);
+
+        Button btnupload = findViewById(R.id.btnUpload);
+        btnupload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Dexter.withActivity(ActivityEdit.this)
+                        .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response)
+                            {
+                                Intent intent=new Intent(Intent.ACTION_PICK);
+                                intent.setType("image/*");
+                                startActivityForResult(Intent.createChooser(intent,"Browse Image"),1);
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                Log.e("data", response.toString());
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        }).check();
+            }
+        });
 
         Button btnSubmit = findViewById(R.id.btnSimpan);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -109,11 +171,13 @@ public class ActivityEdit extends AppCompatActivity {
                 public void onResponse(String response) {
                     //If we are getting success from server
                     if (response.contains("success")) {
+                        Log.e("data", response.toString());
                         Toast.makeText(context, "Simpan Data Sukses", Toast.LENGTH_LONG).show();
                         Intent moveIntent = new Intent(ActivityEdit.this, MainActivity.class);
                         startActivity(moveIntent);
                     } else {
                         //Displaying an error message on toast
+                        Log.e("data", response.toString());
                         Toast.makeText(context, "Gagal Simpan Data", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -132,6 +196,7 @@ public class ActivityEdit extends AppCompatActivity {
                     params.put("nim",NIMMhs);
                     params.put("nama",NamaMhs);
                     params.put("jurusan",JurusanMhs);
+                    params.put("img",encodeImageString);
                     params.put("updateby","NIM");
                     params.put("request","updatedata");
 
@@ -142,6 +207,33 @@ public class ActivityEdit extends AppCompatActivity {
 
             requestQueue.add(stringRequest);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode==1 && resultCode==RESULT_OK)
+        {
+            Uri filepath=data.getData();
+            try
+            {
+                InputStream inputStream=getContentResolver().openInputStream(filepath);
+                bitmap= BitmapFactory.decodeStream(inputStream);
+                ivProfile.setImageBitmap(bitmap);
+                encodeBitmapImage(bitmap);
+            }catch (Exception ex)
+            {
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void encodeBitmapImage(Bitmap bitmap)
+    {
+        ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        byte[] bytesofimage=byteArrayOutputStream.toByteArray();
+        encodeImageString=android.util.Base64.encodeToString(bytesofimage, Base64.DEFAULT);
     }
 
     @Override
